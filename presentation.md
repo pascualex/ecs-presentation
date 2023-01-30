@@ -6,7 +6,7 @@ class: invert
 
 # Arquitectura ECS
 
-Taller introductorio
+Una manera alternativa de hacer videojuegos
 
 ---
 
@@ -14,7 +14,7 @@ Taller introductorio
 
 - Alejandro Pascual Pozo
 - ¡Estuve aquí en la fundación!
-- Vídeo en tiempo real / Rust / WASM
+- WebRTC / Async / WASM / Rust
 - 7 años aficionado al desarrollo de videojuegos
 
 ---
@@ -193,8 +193,8 @@ void Main() {
         new Set<Entity>(),
     );
     while (true) {
-        foreach (var entity : context.entities) {
-            for (var component : entity) {
+        foreach (var entity in context.entities) {
+            foreach (var component in entity) {
                 component.Update(context);
             }
         }
@@ -211,7 +211,7 @@ void Main() {
 
 Externalizar el desarrollo del motor
 
-![auto](image.png)
+![w:600](images/engine_icons.png)
 
 ---
 
@@ -254,24 +254,96 @@ Externalizar el desarrollo del motor
 
 ### ¿Hay espacio para mejorar?
 
-- Funcionalidades
-- Arquitectura
+* Extender las funcionalidades
+* Mejorar la arquitectura
 
 ---
 
-# ¿Qué es ECS?
+# 3. ¿Qué es ECS?
 
 ---
 
-### Entity Component System (ECS)
+### Ya tenemos dos piezas
+
+* Entidades: colecciones de componentes
+* Componentes: piezas combinables
+  * Propiedades (datos)
+  * Fragmento del bucle de juego (funcionalidad)
 
 ---
 
-# ¿Por qué nos interesa?
+### Mirada crítica a EC y OOP
+
+¿Deseamos fragmentos del bucle de juego...
+* ...en ***todos*** los componentes?
+* ...asociados a un ***único*** componente?
+
+---
+
+### Funcionalidad y datos ¿relación 1:1?
+
+* Nombre: sin funcionalidad
+* Vida y regeneración: ambos necesarios
+* Equipo, área y regeneración: los tres necesarios
+
+---
+
+### Ejemplo: estructuras de datos
+
+``` csharp
+class Vehicle {
+    float maxSpeed;
+    float acceleration;
+    float consumptionPerSecond;
+}
+class Firethrower {
+    float consumptionPerSecond;
+}
+class FuelTank {
+    float fuel;
+}
+class Equipable { }
+```
+
+---
+
+### Ejemplo: funcionalidad
+
+* `Vehicle`: interactuable y controlable al volante
+* `Vehicle + FuelTank`: propulsa consumiendo
+* `Firethrower + Equipable`: interactuable y activable
+* `Vehicle + Firethrower`: activable al volante
+* `Firethrower + FuelTank`: dispara consumiendo
+
+---
+
+### Sistemas
+
+Reglas que actúan directamente sobre el contexto
+
+``` csharp
+void Regenerate(Query<(Health, Regeneration)> query) {
+    foreach ((health, regeneration) in query) {
+        health.Heal(regeneration.rate);
+    }
+}
+```
+
+---
+
+### Mirada crítica a mis ejemplos
+
+¿De verdad es motivo suficiente <br/> para cambiar de arquitectura?
+
+---
+
+# 4. ¿Por qué nos interesa?
 
 ---
 
 ### Ergonomía
+
+* Se acabaron los managers
 
 ---
 
