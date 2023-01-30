@@ -272,7 +272,7 @@ Externalizar el desarrollo del motor
 
 ---
 
-### Mirada crítica a EC y OOP
+### Mirada crítica a EC
 
 ¿Deseamos fragmentos del bucle de juego...
 * ...en ***todos*** los componentes?
@@ -288,32 +288,20 @@ Externalizar el desarrollo del motor
 
 ---
 
-### Ejemplo: estructuras de datos
+### Funcionalidades sobre grupos
 
-``` csharp
-class Vehicle {
-    float maxSpeed;
-    float acceleration;
-    float consumptionPerSecond;
-}
-class Firethrower {
-    float consumptionPerSecond;
-}
-class FuelTank {
-    float fuel;
-}
-class Equipable { }
-```
+Solo debe pelear una pareja de guerreros
+- Un miembro del equipo rojo
+- Un miembro del equipo azúl
+- La más cercana entre sí
 
 ---
 
-### Ejemplo: funcionalidad
+### ¿Fragmentar el bucle de juego?
 
-* `Vehicle`: interactuable y controlable al volante
-* `Vehicle + FuelTank`: propulsa consumiendo
-* `Firethrower + Equipable`: interactuable y activable
-* `Vehicle + Firethrower`: activable al volante
-* `Firethrower + FuelTank`: dispara consumiendo
+* No queremos volver al bucle infernal
+* Meterlo en las clases era lo más intuitivo
+* Funciones de primera clase
 
 ---
 
@@ -331,9 +319,10 @@ void Regenerate(Query<(Health, Regeneration)> query) {
 
 ---
 
-### Mirada crítica a mis ejemplos
+### Convivir con estos problemas
 
-¿De verdad es motivo suficiente <br/> para cambiar de arquitectura?
+- ¿De verdad es tan malo?
+- ¿Merece la pena empezar de nuevo?
 
 ---
 
@@ -344,10 +333,20 @@ void Regenerate(Query<(Health, Regeneration)> query) {
 ### Ergonomía
 
 * Se acabaron los managers
+* Se acabaron los requires
+* Se acabaron los nulls
+* Se acabaron los singletons
 
 ---
 
 ### Rendimiento
+
+* El desacoplamiento no solo nos ayuda a nosotros
+* Las queries iteran sobre datos compactos
+
+---
+
+### Invalidación de la caché
 
 ---
 
@@ -359,7 +358,11 @@ void Regenerate(Query<(Health, Regeneration)> query) {
 
 ---
 
-### Integración en Unity
+### Unity
+
+---
+
+### Unreal Engine
 
 ---
 
