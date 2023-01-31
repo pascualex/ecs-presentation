@@ -14,7 +14,7 @@ Una manera alternativa de hacer videojuegos
 
 - Alejandro Pascual Pozo
 - ¡Estuve aquí en la fundación!
-- WebRTC / Async / WASM / Rust
+- WebRTC / WASM / Async / Rust
 - 7 años aficionado al desarrollo de videojuegos
 
 ---
@@ -66,7 +66,6 @@ void Main() {
 
 ``` csharp
 void Main() {
-    // other resources
     var context = new Context(
         new Renderer(),
         new AudioPlayer(),
@@ -211,7 +210,7 @@ void Main() {
 
 Externalizar el desarrollo del motor
 
-![w:600](images/engine_icons.png)
+![h:250](images/engine_icons.png)
 
 ---
 
@@ -227,7 +226,7 @@ Externalizar el desarrollo del motor
 
 `Transform`, `Mesh/SpriteRenderer`, `RigidBody`...
 
-![w:700](images/unity_inspector.png)
+![h:400](images/unity_inspector.png)
 
 ---
 
@@ -300,8 +299,8 @@ Solo debe pelear una pareja de guerreros
 ### ¿Fragmentar el bucle de juego?
 
 * No queremos volver al bucle infernal
-* Meterlo en las clases era lo más intuitivo
-* Funciones de primera clase
+* Meterlo dentro de las clases era lo más intuitivo
+* ¿Por qué no usar funciones de primera clase?
 
 ---
 
@@ -316,6 +315,14 @@ void Regenerate(Query<(Health, Regeneration)> query) {
     }
 }
 ```
+
+---
+
+### Definiciones ECS
+
+- Entidades: colecciones de componentes
+- Componentes: propiedades (datos)
+- Sistemas: reglas
 
 ---
 
@@ -342,27 +349,98 @@ void Regenerate(Query<(Health, Regeneration)> query) {
 ### Rendimiento
 
 * El desacoplamiento no solo nos ayuda a nosotros
-* Las queries iteran sobre datos compactos
+* La lógica ha dado un paso atrás
+* Ahora es más fácil aplicar ciertas optimizaciones
 
 ---
 
-### Invalidación de la caché
+### Invalidación de caché
+
+[Demo interactiva](http://www.overbyte.com.au/misc/Lesson3/CacheFun.html)
 
 ---
 
-# ECS en la industria
+### Eliminemos los punteros
+
+* ~~Referencias intra-entidad~~ → Queries
+* ~~Referencias sobre conjuntos~~ → Queries
+* ~~Referencias a recursos~~ → Acceso directo
+* ~~Referencias a otras entidades~~ → Ids
 
 ---
 
-### Motores propietarios
+### Componentes en memoria
+
+![h:500](images/unsorted_memory.png)
+
+---
+
+### Ordenemos
+
+![h:500](images/sorted_memory.png)
+
+---
+
+### It's free!
+
+- Gracias a ECS, no empeora la ergonomía
+- El motor gestiona estas optimizaciones
+
+---
+
+# 5. ECS en la industria
+
+---
+
+### Motores propietarios en producción
+
+![h:500](images/overwatch_ecs.png)
+
+*Overwatch Gameplay Architecture and Netcode - GDC*
 
 ---
 
 ### Unity
 
+![h:500](images/unity_ecs_inspector.png)
+
 ---
 
-### Unreal Engine
+### Primera aparición en 2017
+
+![h:500](images/unity_ecs_battle.gif)
+
+*Massive Battle in the Spellsouls Universe - Unite 2017*
+
+---
+
+### Años en desarrollo
+
+![h:500](images/unity_ecs_city.gif)
+
+*ECS "Megacity" walkthrough - Unite 2018*
+
+---
+
+### Mejoras de ergonomía y rendimiento
+
+![h:500](images/unity_ecs_city_mobile.gif)
+
+*ECS "Megacity" walkthrough - Unite 2018*
+
+---
+
+### 1.0 y producción en 2022
+
+![h:500](images/v_rising.png)
+
+---
+
+### Unreal Engine 5
+
+![h:500](images/ue_ecs.gif)
+
+*Large Numbers of Entities with Mass - State of UE 2022*
 
 ---
 
@@ -374,4 +452,4 @@ void Regenerate(Query<(Health, Regeneration)> query) {
 
 ---
 
-# Demo
+# 6. Demo
