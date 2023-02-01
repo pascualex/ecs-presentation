@@ -39,8 +39,9 @@ fn regenerate_healths(mut query: Query<(&mut Health, &Regeneration)>, time: Res<
 }
 
 fn print_healths(query: Query<&Health>) {
-    println!("Healths:");
+    print!("Healths:");
     for health in &query {
-        println!("- {}", health.current);
+        print!(" {:.2}", health.current);
     }
+    println!();
 }
