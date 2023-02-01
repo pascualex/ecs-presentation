@@ -282,6 +282,7 @@ Externalizar el desarrollo del motor
 ### Funcionalidad y datos ¿relación 1:1?
 
 * Nombre: sin funcionalidad
+* Inventario de un cofre: sin funcionalidad propia
 * Vida y regeneración: ambos necesarios
 * Equipo, área y regeneración: los tres necesarios
 
@@ -291,7 +292,7 @@ Externalizar el desarrollo del motor
 
 Solo debe pelear una pareja de guerreros
 - Un miembro del equipo rojo
-- Un miembro del equipo azúl
+- Un miembro del equipo azul
 - La más cercana entre sí
 
 ---
@@ -444,12 +445,359 @@ void Regenerate(Query<(Health, Regeneration)> query) {
 
 ---
 
-### Proyectos de código abierto
+### Godot
+
+![h:500](images/godot_ecs.png)
+
+---
+
+### Otros proyectos de código abierto
+
+![h:500](images/github_engines.png)
 
 ---
 
 ### Bevy
 
+![h:150](images/bevy_icon.png)
+
+* ECS nativo y eficiente ⚙️
+* Máxima ergonomía 🚀
+* Rust 🦀
+* 2.5 años de desarrollo 🍼
+* Sin editor 😵
+
 ---
 
 # 6. Demo
+
+---
+
+### Hello world en Rust
+
+``` rust
+fn main() {
+    println!("Hello world!");
+}
+```
+
+```
+Hello world!
+```
+
+---
+
+### Hello world en Bevy
+
+
+``` rust
+fn main() {
+    App::new()
+        .add_startup_system(say_hello_world)
+        .run();
+}
+
+fn say_hello_world() {
+    println!("Hello world!");
+}
+```
+
+```
+Hello world!
+```
+
+---
+
+### Introduciendo el game loop
+
+``` rust
+fn main() {
+    App::new()
+        .add_plugins(MinimalPlugins)
+        // CorePlugin, TimePlugin
+        // ScheduleRunnerPlugin
+        .add_system(say_hello_world)
+        .run();
+}
+
+fn say_hello_world() {
+    println!("Hello world!");
+}
+```
+
+```
+Hello world!
+Hello world!
+...
+```
+
+---
+
+### Nuestro primer componente
+
+``` rust
+#[derive(Component)]
+struct Health {
+    current: f32,
+}
+```
+
+---
+
+### Nuestras primeras entidades
+
+``` rust
+app.add_startup_sytem(spawn_entity);
+
+fn spawn_entity(mut commands: Commands) {
+    commands.spawn(Health { current: 100.0 });
+    commands.spawn(Health { current: 50.0 });
+}
+```
+
+---
+
+### Nuestra primera query
+
+``` rust
+app.add_system(print_health);
+
+fn print_healths(query: Query<&Health>) {
+    println!("Healths:");
+    for health in &query {
+        println!("- {}", health.current);
+    }
+}
+```
+
+---
+
+### Ejemplo vida: código
+
+``` rust
+fn main() {
+    App::new()
+        .add_plugins(MinimalPlugins)
+        .add_startup_system(spawn_entities)
+        .add_system(print_health)
+        .run();
+}
+
+#[derive(Component)]
+struct Health {
+    current: f32,
+}
+
+fn spawn_entities(mut commands: Commands) {
+    commands.spawn(Health { current: 100.0 });
+    commands.spawn(Health { current: 50.0 });
+}
+
+fn print_healths(query: Query<&Health>) {
+    println!("Healths:");
+    for health in &query {
+        println!("- {}", health.current);
+    }
+}
+```
+
+---
+
+### Ejemplo vida: salida
+
+```
+Healths:
+- 50
+- 100
+Healths:
+- 50
+- 100
+...
+```
+
+---
+
+### Introduciendo otro componente
+
+``` rust
+#[derive(Component)]
+struct Regeneration {
+    rate: f32,
+}
+```
+
+---
+
+### Modificando nuestro spawner
+
+``` rust
+fn spawn_entities(mut commands: Commands) {
+    commands.spawn(Health { current: 100.0 });
+    commands.spawn((
+        Health { current: 50.0 },
+        Regeneration { rate: 1.0 },
+    );
+}
+```
+
+---
+
+### Queries sobre tuplas
+
+``` rust
+app.add_system(regenerate_healths);
+
+fn regenerate_healths(
+    mut query: Query<(&mut Health, &Regeneration)>,
+) {
+    for (mut health, regeneration) in &mut query {
+        health.current += regeneration.rate;
+    }
+}
+```
+
+---
+
+### Ejemplo regeneración: código
+
+``` rust
+fn main() { /* ... */ }
+
+#[derive(Component)]
+struct Health { /* ... */ }
+
+#[derive(Component)]
+struct Regeneration {
+    rate: f32,
+}
+
+fn spawn_entities(mut commands: Commands) {
+    commands.spawn(Health { current: 100.0 });
+    commands.spawn((Health { current: 50.0 }, Regeneration { rate: 1.0 }));
+}
+
+fn regenerate_healths(mut query: Query<(&mut Health, &Regeneration)>) {
+    for (mut health, regeneration) in &mut query {
+        health.current += regeneration.rate;
+    }
+}
+
+fn print_healths(query: Query<&Health>) { /* ... */ }
+```
+
+---
+
+### Ejemplo regeneración: salida
+
+```
+Healths:
+- 100
+- 50
+Healths:
+- 100
+- 51
+Healths:
+- 100
+- 52
+...
+```
+
+---
+
+### TimePlugin
+
+``` rust
+fn regenerate_healths(
+    mut query: Query<(&mut Health, &Regeneration)>,
+    time: Res<Time>,
+) {
+    for (mut health, regeneration) in &mut query {
+        health.current += regeneration.rate * time.delta_seconds();
+    }
+}
+```
+
+---
+
+### Nuestro primer plugin
+
+``` rust
+fn main() {
+    App::new()
+        .add_plugins(MinimalPlugins)
+        .add_plugin(HealthPlugin)
+        .add_startup_system(spawn_entities)
+        .run();
+}
+
+struct HealthPlugin;
+
+impl Plugin for HealthPlugin {
+    fn build(&self, app: &mut App) {
+        app.add_system(regenerate_healths)
+            .add_system(print_healths);
+    }
+}
+```
+
+---
+
+### Bevy es más que la arquitectura ECS
+
+Pero todo está construido sobre ella: ¡plugins!
+
+AnimationPlugin
+AssetPlugin
+AudioPlugin
+CorePlugin
+BloomPlugin
+Core2dPlugin
+Core3dPlugin
+FxaaPlugin
+CorePipelinePlugin
+TonemappingPlugin
+UpscalingPlugin
+DiagnosticsPlugin
+EntityCountDiagnosticsPlugin
+
+FrameTimeDiagnosticsPlugin
+LogDiagnosticsPlugin
+GilrsPlugin
+GltfPlugin
+HierarchyPlugin
+InputPlugin
+LogPlugin
+MeshRenderPlugin
+PbrPlugin
+WireframePlugin
+CameraPlugin
+GlobalsPlugin
+MeshPlugin
+
+FrameCountPlugin
+RenderPlugin
+ImagePlugin
+ViewPlugin
+VisibilityPlugin
+WindowRenderPlugin
+ScenePlugin
+ColorMaterialPlugin
+Mesh2dRenderPlugin
+SpritePlugin
+TextPlugin
+TimePlugin
+TransformPlugin
+
+UiPlugin
+WindowPlugin
+WinitPlugin
+ScheduleRunnerPlugin
+RenderAssetPlugin
+ExtractComponentPlugin
+UniformComponentPlugin
+MaterialPlugin
+Material2dPlugin
+ExtractResourcePlugin
+AssetCountDiagnosticsPlugin
+ValidParentCheckPlugin
+CameraProjectionPlugin
