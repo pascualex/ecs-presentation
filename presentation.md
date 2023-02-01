@@ -742,62 +742,51 @@ impl Plugin for HealthPlugin {
 
 ---
 
+### Repaso
+
+* Entidad: colección de componentes con ID
+* Componente: struct asociado a una entidad
+* Recurso: struct global
+* Sistema: función ejecutada por el motor
+* Query: iterador sobre tuplas de componentes
+* Comandos: gestor de entidades y componentes
+* Plugin: colección de elementos modularizada
+
+---
+
+### Más elementos de la arquitectura
+
+* Eventos: `EventWriter<T>` y `EventReader<T>`
+* Estados: `on_enter`, `on_exit` y `on_update`
+* Condiciones de ejecución arbitrariamente complejas
+* Paralelización automática y manual
+* Mundos
+
+---
+
 ### Bevy es más que la arquitectura ECS
 
 Pero todo está construido sobre ella: ¡plugins!
 
-AnimationPlugin
-AssetPlugin
-AudioPlugin
-CorePlugin
-BloomPlugin
-Core2dPlugin
-Core3dPlugin
-FxaaPlugin
-CorePipelinePlugin
-TonemappingPlugin
-UpscalingPlugin
-DiagnosticsPlugin
-EntityCountDiagnosticsPlugin
+---
 
-FrameTimeDiagnosticsPlugin
-LogDiagnosticsPlugin
-GilrsPlugin
-GltfPlugin
-HierarchyPlugin
-InputPlugin
-LogPlugin
-MeshRenderPlugin
-PbrPlugin
-WireframePlugin
-CameraPlugin
-GlobalsPlugin
-MeshPlugin
+### Plugins oficiales
 
-FrameCountPlugin
-RenderPlugin
-ImagePlugin
-ViewPlugin
-VisibilityPlugin
-WindowRenderPlugin
-ScenePlugin
-ColorMaterialPlugin
-Mesh2dRenderPlugin
-SpritePlugin
-TextPlugin
-TimePlugin
-TransformPlugin
+![w:1100](images/bevy_plugins.png)
 
-UiPlugin
-WindowPlugin
-WinitPlugin
-ScheduleRunnerPlugin
-RenderAssetPlugin
-ExtractComponentPlugin
-UniformComponentPlugin
-MaterialPlugin
-Material2dPlugin
-ExtractResourcePlugin
-AssetCountDiagnosticsPlugin
-ValidParentCheckPlugin
-CameraProjectionPlugin
+---
+
+### DefaultPlugins
+
+* HierarchyPlugin: `Parent`, `Children`
+* TransformPlugin: `Transform`, `GlobalTransform`
+* RenderPlugin: `Camera`, `Image`, `Mesh` y `Shader`
+* AudioPlugin: `Audio`
+* AssetPlugin: `AssetLoader` y `Assets<T>`
+* InputPlugin: `Input<T>`
+* DiagnosticsPlugin: `Diagnostics`
+* Y más...
+
+---
+
+# ¿Preguntas?
