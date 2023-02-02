@@ -2,6 +2,7 @@
 marp: true
 theme: uncover
 class: invert
+paginate: true
 ---
 
 # Arquitectura ECS
@@ -14,19 +15,23 @@ Una manera alternativa de hacer videojuegos
 
 - Alejandro Pascual Pozo
 - ¡Estuve aquí en la fundación!
-- WebRTC / WASM / Async / Rust
+- WebRTC / WASM / Backend / Rust
 - 7 años aficionado al desarrollo de videojuegos
 
 ---
 
-### Sobre este taller
+### Sobre esta presentación
 
-1) Motores de juego
-2) Motores comerciales modernos
-3) ¿Qué es ECS?
-4) Ventajas de ECS
-5) ECS en la industria
-6) Demo
+* Introducción
+  1. Motores de juego
+  2. Motores comerciales modernos
+* Definición
+  3. ¿Qué es ECS?
+  4. Ventajas de ECS
+* Adopción
+  5. ECS en la industria
+  6. Programando sobre ECS
+* Conclusiones
 
 ---
 
@@ -112,7 +117,7 @@ class WarriorEntity {
 }
 ```
 
-* `Udpate()` muy compleja
+* `Update()` muy compleja
 * Entidades muy complejas
 
 ---
@@ -135,7 +140,7 @@ class SpriteComponent { /* ... */ }
 class SoundComponent { /* ... */ }
 ```
 
-* `Udpate()` muy compleja
+* `Update()` muy compleja
 
 ---
 
@@ -173,12 +178,13 @@ class SpriteComponent : IComponent { /* ... */ }
 class SoundComponent : IComponent { /* ... */ }
 
 var leonidas = new Entity();
-leonidas.Add(new HealthComponent());
-leonidas.Add(new SpriteComponent());
-leonidas.Add(new SoundComponent());
+leonidas.components.Add(new HealthComponent());
+leonidas.components.Add(new SpriteComponent());
+leonidas.components.Add(new SoundComponent());
 ```
 
 * `Context` muy complejo
+
 ---
 
 ### Bucle de juego estático
@@ -323,7 +329,7 @@ void Regenerate(Query<(Health, Regeneration)> query) {
 
 - Entidades: colecciones de componentes
 - Componentes: propiedades (datos)
-- Sistemas: reglas
+- Sistemas: reglas *universales*
 
 ---
 
@@ -334,7 +340,7 @@ void Regenerate(Query<(Health, Regeneration)> query) {
 
 ---
 
-# 4. ¿Por qué nos interesa?
+# 4. Ventajas de ECS
 
 ---
 
@@ -355,7 +361,7 @@ void Regenerate(Query<(Health, Regeneration)> query) {
 
 ---
 
-### Invalidación de caché
+### Cache prefetching
 
 [Demo interactiva](http://www.overbyte.com.au/misc/Lesson3/CacheFun.html)
 
@@ -469,7 +475,7 @@ void Regenerate(Query<(Health, Regeneration)> query) {
 
 ---
 
-# 6. Demo
+# 6. Programando sobre ECS
 
 ---
 
@@ -547,9 +553,9 @@ struct Health {
 ### Nuestras primeras entidades
 
 ``` rust
-app.add_startup_sytem(spawn_entity);
+app.add_startup_sytem(spawn_entities);
 
-fn spawn_entity(mut commands: Commands) {
+fn spawn_entities(mut commands: Commands) {
     commands.spawn(Health { current: 100.0 });
     commands.spawn(Health { current: 50.0 });
 }
@@ -560,7 +566,7 @@ fn spawn_entity(mut commands: Commands) {
 ### Nuestra primera query
 
 ``` rust
-app.add_system(print_health);
+app.add_system(print_healths);
 
 fn print_healths(query: Query<&Health>) {
     println!("Healths:");
@@ -579,7 +585,7 @@ fn main() {
     App::new()
         .add_plugins(MinimalPlugins)
         .add_startup_system(spawn_entities)
-        .add_system(print_health)
+        .add_system(print_healths)
         .run();
 }
 
@@ -636,7 +642,7 @@ fn spawn_entities(mut commands: Commands) {
     commands.spawn((
         Health { current: 50.0 },
         Regeneration { rate: 1.0 },
-    );
+    ));
 }
 ```
 
@@ -789,4 +795,24 @@ Pero todo está construido sobre ella: ¡plugins!
 
 ---
 
-# ¿Preguntas?
+# Conclusiones
+
+---
+
+### Conclusiones
+
+* Futuro prometedor
+* Pick your poison
+  - ECS inmaduro en motores maduros
+  - ECS maduro en motores inmaduros
+* El aprendizaje de EC y ECS es complementario
+
+---
+
+### Antes de terminar
+
+* [github.com/pascualex/ecs-presentation](https://github.com/pascualex/ecs-presentation)
+* [github.com/bevyengine/bevy/tree/main/examples](https://github.com/bevyengine/bevy/tree/main/examples)
+* [learn.unity.com/tutorial/entity-component-system](https://learn.unity.com/tutorial/entity-component-system)
+* ¿Preguntas?
+
